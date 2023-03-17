@@ -1,0 +1,22 @@
+#!/usr/bin/swift
+import Foundation
+
+let fileURL: URL = URL(fileURLWithPath:"/")
+
+// Find available and total capacity and calculate percent used
+do {
+    let values: URLResourceValues = try fileURL.resourceValues(forKeys: [.volumeAvailableCapacityKey,.volumeAvailableCapacityForImportantUsageKey, .volumeAvailableCapacityForOpportunisticUsageKey, .volumeTotalCapacityKey])
+
+    let available = values.volumeAvailableCapacityForImportantUsage
+    let total = values.volumeTotalCapacity 
+
+    // Unwrap the variables and cast them to double
+    let a = Double(available ?? 0)
+    let t = Double(total ?? 1)
+
+    // Calculate percent full and round it, i.e. 0.22670 becomes 23
+    let percent_full = Int( round( (1 - a / t) * 100) )
+    print("<result>", percent_full, "</result>", separator: "")
+} catch {
+    print("Error retrieving capacity: \(error.localizedDescription)")
+}
